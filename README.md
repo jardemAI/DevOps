@@ -10,11 +10,11 @@
 
 ```text
 marchenko-danil-devops/
-├── app/                    # Python HTTP application
+├── app/                    # my Python HTTP application
 ├── assets/                 # workflow diagram source and rendering
 ├── backup/                 # ignored runtime backup files
 ├── config/app.conf
-├── logs/                   # runtime application.log is intentionally ignored
+├── logs/                   # local application.log is intentionally ignored
 ├── scripts/Marchenko_Danil_system.sh
 ├── tests/test_app.py
 ├── Dockerfile
@@ -29,14 +29,15 @@ marchenko-danil-devops/
 
 ## Part A - Linux
 
-The project is in `~/devops/marchenko-danil-devops`. Required directories are `app`, `scripts`, `config`, `logs`, and `backup`. `Marchenko_Danil_info.txt` contains the student details. `config/app.conf` documents non-secret settings. `logs/application.log` is a local ignored runtime log; `logs/application.log.example` is kept in Git.
+I organized my project in `~/devops/marchenko-danil-devops` and created the required directories: `app`, `scripts`, `config`, `logs`, and `backup`. I added my student details to `Marchenko_Danil_info.txt` and documented non-secret application settings in `config/app.conf`. I keep the runtime log `logs/application.log` out of Git and include `logs/application.log.example` as a sample.
 
-Useful demonstrations from the project directory:
+To recreate the local log and demonstrate the required commands, I use:
 
 ```bash
+cd ~/devops/marchenko-danil-devops
+cp logs/application.log.example logs/application.log
 pwd
 ls -la
-cd ~/devops/marchenko-danil-devops
 mkdir -p /tmp/devops-demo
 touch /tmp/devops-demo/source.txt
 cp /tmp/devops-demo/source.txt /tmp/devops-demo/copy.txt
@@ -52,15 +53,15 @@ grep -c 'ERROR' logs/application.log
 tail -n 5 logs/application.log
 ```
 
-`pwd` prints the current path; `ls` lists entries; `cd` changes directory; `mkdir` creates directories; `touch` creates a file or updates its timestamp; `cp` copies; `mv` moves or renames; `rm` removes; `cat` prints file contents; `head` and `tail` print the first and last lines. `find` searches by path or name. `grep` selects matching lines and `grep -c` counts them. The sample log has 12 lines, 2 `ERROR` records, and 3 `WARNING` records.
+I used `pwd` to print the current path, `ls` to list entries, `cd` to change directories, and `mkdir` to create a directory. `touch` creates a file or updates its timestamp; `cp` copies; `mv` moves or renames; `rm` removes; `cat` prints file contents; `head` and `tail` print the first and last lines. `find` searches by path or name. `grep` selects matching lines, and `grep -c` counts them. My sample log contains 12 lines, including 2 `ERROR` records and 3 `WARNING` records.
 
-Permissions differ by design: `private.txt` uses mode `600` (`rw-------`), so only its owner can read or write it; `public.txt` uses `644` (`rw-r--r--`), so the owner can read and write and everyone else can read. `r` means read, `w` means write, and `x` means execute for a file or directory traversal for a directory. The owner is the file's user, the group is its assigned group, and others are all remaining users. Git records the executable bit, not ordinary read/write differences, so set these modes after checkout with `chmod 600 private.txt && chmod 644 public.txt`; view them with `ls -l`.
+I set `private.txt` to mode `600` (`rw-------`), so only its owner can read or write it. I set `public.txt` to mode `644` (`rw-r--r--`), so the owner can read and write and everyone else can read. `r` means read, `w` means write, and `x` means execute for a file or directory traversal for a directory. The owner is the file's user, the group is its assigned group, and others are all remaining users. Git records the executable bit, not ordinary read/write differences, so after checkout I set the modes with `chmod 600 private.txt && chmod 644 public.txt`; I inspect them with `ls -l`.
 
-Run the system-information script with `bash scripts/Marchenko_Danil_system.sh` or, after making it executable, `./scripts/Marchenko_Danil_system.sh`. It calls `whoami`, `hostname`, `date`, `uname`, `df`, and `free`, then checks that the student information file exists. `ps` and `ps aux` show process snapshots; `top` refreshes process statistics interactively. A process is a running program instance; PID is its process identifier. In `top`, identify PID, USER, `%CPU`, and `%MEM` for a process actually present on your machine.
+I ran my system-information script with `bash scripts/Marchenko_Danil_system.sh` and verified that it is executable with `./scripts/Marchenko_Danil_system.sh`. The script calls `whoami`, `hostname`, `date`, `uname`, `df`, and `free`, then checks that my student information file exists. I also inspected process snapshots with `ps` and `ps aux`, and used `top` to view refreshed process statistics. A process is a running program instance; PID is its process identifier. In `top`, I identify PID, USER, `%CPU`, and `%MEM` for a process running on the machine I am using.
 
 ## Part B - Git and GitHub
 
-The repository has meaningful commits for the Linux project layout, student details and utilities, Python application and tests, Docker, Jenkins, and a feature branch merged into `main`. Inspect the history with:
+I created meaningful commits for the Linux project layout and utilities, my student details, the Python application and tests, Docker, and Jenkins. I created a `development` branch, added a JSON `/ready` endpoint and a test for it, and merged that feature into `main`. I inspect my history and remotes with:
 
 ```bash
 git status
@@ -70,7 +71,7 @@ git branch -av
 git remote -v
 ```
 
-`.gitignore` excludes `*.log`, `backup/`, and `.env` so runtime output, backup data, and local settings are not committed. Demonstrate the rules without using actual secret values:
+I configured `.gitignore` to exclude `*.log`, `backup/`, and `.env`, so runtime output, backup data, and local settings are not committed. I verified the rules with disposable files, without using actual secret values:
 
 ```bash
 touch ignored-demo.log
@@ -79,13 +80,13 @@ git status --short --ignored | grep -E 'ignored-demo.log|backup/'
 rm -f ignored-demo.log backup/local-copy.txt
 ```
 
-A branch is an isolated line of development. The `development` branch adds a JSON `/ready` endpoint and a test for it; its feature commit is merged into `main`. Git records project history; GitHub hosts the shared remote repository at [jardemAI/DevOps](https://github.com/jardemAI/DevOps).
+A branch is an isolated line of development. I used `development` to test the `/ready` feature before merging it into `main`. Git records my project history, and I published the shared repository at [jardemAI/DevOps](https://github.com/jardemAI/DevOps).
 
 ## Part C - Docker
 
-The `Dockerfile` uses `FROM`, `WORKDIR`, `COPY`, `RUN`, `EXPOSE`, and `CMD`. It packages the standard-library Python application, runs it as a non-root user, exposes port `8000`, and serves student details at `/` and `/student`. `/health` returns `OK`; `/version`, `/metadata`, and `/ready` return application version, student metadata, and readiness information. Environment variables override defaults.
+I wrote a `Dockerfile` using `FROM`, `WORKDIR`, `COPY`, `RUN`, `EXPOSE`, and `CMD`. It packages my standard-library Python application, runs it as a non-root user, exposes port `8000`, and serves my student details at `/` and `/student`. `/health` returns `OK`; `/version`, `/metadata`, and `/ready` provide the application version, student metadata, and readiness information. Environment variables override the defaults.
 
-On a host with Docker Engine installed:
+On a host with Docker Engine installed, I can build and run the application with:
 
 ```bash
 docker build -t marchenko-danil-devops .
@@ -108,17 +109,21 @@ docker start marchenko-danil-container
 docker rm -f marchenko-danil-container
 ```
 
-An environment variable is a named runtime setting supplied to a process. It lets one image be reused with different student values or deployment settings. Do not bake passwords, access tokens, or other secrets into an image because layers and registries can retain them; inject secrets through an approved runtime secret mechanism instead. An image is a packaged template; a container is a running or stopped instance created from an image.
+An environment variable is a named runtime setting supplied to a process. It lets me reuse one image with different student values or deployment settings. I do not bake passwords, access tokens, or other secrets into an image because layers and registries can retain them; I would supply secrets through an approved runtime secret mechanism instead. An image is a packaged template; a container is a running or stopped instance created from an image.
 
-`docker-compose.yml` defines the application, ports, image, and environment values. Run `docker compose up --build`, inspect with `docker compose ps`, then remove it with `docker compose down`.
+I configured `docker-compose.yml` with the application, ports, image, and environment values. On a Docker-enabled host, I can start it with `docker compose up --build`, inspect it with `docker compose ps`, and remove it with `docker compose down`.
+
+**Execution status:** I prepared the Docker configuration, but I could not build an image or run a container in my current sandbox because Docker Engine is not installed (`docker: command not found`). I still need to run these commands on a Docker-enabled host.
 
 ## Part D - Jenkins
 
-Create a Jenkins **Pipeline** job named exactly `Marchenko_Danil_DevOps`. Configure **Pipeline script from SCM**, SCM **Git**, repository `https://github.com/jardemAI/DevOps`, branch `*/main`, and script path `Jenkinsfile`. This repository is public, so checkout does not require credentials. Configure an automatic trigger only when Jenkins is reachable by GitHub.
+I wrote a declarative `Jenkinsfile` with the stages `Checkout`, `Build`, `Test`, `Docker Build`, and `Docker Run`. It sets my student environment values, runs the Python tests, builds a Docker image, starts a container, checks the HTTP response, prints container logs, and removes the container after the run.
 
-The declarative pipeline has `Checkout`, `Build`, `Test`, `Docker Build`, and `Docker Run` stages. It sets the student environment values, builds and tests the application, builds a Docker image, runs a container, checks the HTTP response, and prints container logs. The Jenkins agent needs Python 3 and Docker Engine access, including permission to access the Docker daemon. A failed stage normally stops later stages and marks the build failed; fix the cause before rerunning.
+To run it, I create a Jenkins **Pipeline** job named exactly `Marchenko_Danil_DevOps`. I configure **Pipeline script from SCM**, SCM **Git**, repository `https://github.com/jardemAI/DevOps`, branch `*/main`, and script path `Jenkinsfile`. My repository is public, so checkout does not need credentials. The Jenkins agent needs Python 3 and Docker Engine access, including permission to access the Docker daemon. I configure an automatic trigger only when Jenkins is reachable by GitHub.
 
-The Jenkinsfile is configuration, not proof of a successful run. Docker is not installed in the current sandbox and no Jenkins server URL or job access was supplied. Therefore no Jenkins job, image, container, or successful Jenkins result is claimed. Run the pipeline on an accessible Jenkins and Docker host to produce its authentic stage and console evidence.
+When the job starts, Jenkins retrieves my Jenkinsfile and source from GitHub, assigns an agent, runs the stages in order, and records the console output and result. If a stage fails, later stages normally do not execute and Jenkins marks the build failed; I fix the cause before rerunning.
+
+**Execution status:** I prepared the pipeline, but I did not create or run the Jenkins job because I do not have a Jenkins server URL or job access, and Docker is not installed in my current sandbox. I therefore do not claim a successful Jenkins result. I still need to run the pipeline on an accessible Jenkins and Docker host and capture its genuine stage and console evidence.
 
 ## Part E - Integrated workflow
 
@@ -127,8 +132,10 @@ Linux workspace -> Git commits and merge -> GitHub -> Jenkins checkout
                -> Build -> Test -> Docker image -> Docker container -> SUCCESS
 ```
 
-Linux provides the shell and operating-system tools used to create and inspect the project. Git records changes; GitHub provides the source Jenkins checks out. Jenkins automates the build and tests, then asks Docker to package and start the application. A health and student-information check verifies the launched application. The image is the reusable package and the container is its runtime instance.
+In my workflow, I use Linux shell and operating-system tools to create and inspect project files. Git records changes and merges; GitHub hosts my repository and provides the source Jenkins checks out. Jenkins automates the build and tests, then uses Docker to package and start my application. A health and student-information check verifies the launched application. The image is the reusable package, and the container is its runtime instance.
+
+If a pipeline stage fails, later stages normally do not execute. Jenkins records a failed build, and I need to fix the cause before running the pipeline again. This workflow connects my local project to version control, a remote repository, automated checks, and container deployment.
 
 ## Submission status
 
-The personalized project and PDF report are published at [jardemAI/DevOps](https://github.com/jardemAI/DevOps). Five Python unit tests and the Bash system-information script passed in the sandbox. Docker execution and a genuine Jenkins run still require a suitable host. Do not claim a successful pipeline unless the actual Jenkins run confirms it.
+I published my personalized project and report at [jardemAI/DevOps](https://github.com/jardemAI/DevOps). I ran five Python unit tests and my Bash system-information script successfully in the sandbox, and I checked the HTTP endpoints. I prepared the Docker and Jenkins configurations, but I still need access to a Docker-enabled host and a Jenkins server to run those parts of the lab.
