@@ -1,0 +1,13 @@
+services:
+  student-app:
+    build: .
+    image: marchenko-danil-devops:latest
+    container_name: marchenko-danil-container
+    ports:
+      - "8000:8000"
+    environment:
+      STUDENT_NAME: ${STUDENT_NAME:-Danil}
+      STUDENT_SURNAME: ${STUDENT_SURNAME:-Marchenko}
+      STUDENT_GROUP: ${STUDENT_GROUP:-IT2-2303}
+      STUDENT_ID: ${STUDENT_ID:-41587}
+    restart: unless-stopped
