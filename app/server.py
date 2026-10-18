@@ -24,6 +24,10 @@ def application_metadata():
     return metadata
 
 
+def readiness_status():
+    return {"status": "ready", "version": application_version()}
+
+
 class StudentApplicationHandler(BaseHTTPRequestHandler):
     server_version = "DevOpsStudentApp/1.0"
 
@@ -31,6 +35,10 @@ class StudentApplicationHandler(BaseHTTPRequestHandler):
         content_type = "text/plain; charset=utf-8"
         if self.path == "/health":
             body = "OK\n"
+            status = 200
+        elif self.path == "/ready":
+            body = json.dumps(readiness_status(), indent=2) + "\n"
+            content_type = "application/json; charset=utf-8"
             status = 200
         elif self.path == "/metadata":
             body = json.dumps(application_metadata(), indent=2) + "\n"
