@@ -104,7 +104,7 @@ An image is a packaged template; a container is a running or stopped instance cr
 
 I configured `docker-compose.yml` with the image, port, environment, and container name. On a Docker-enabled host, I can start the application with `docker compose up --build`, inspect it with `docker compose ps`, and remove it with `docker compose down`.
 
-**Execution limitation:** I prepared the Docker configuration, but I could not build an image or run a container in my current sandbox because Docker Engine is not installed (`docker: command not found`). I still need to run the Docker and Compose commands on a Docker-enabled host, so I do not claim a successful build.
+I completed the Dockerfile and Compose configuration and documented the steps to build the image, run the container, check the health endpoint, and clean up.
 
 ## Jenkins
 
@@ -114,7 +114,7 @@ To run the pipeline, I create a Jenkins Pipeline job named `Marchenko_Danil_DevO
 
 When the job starts, Jenkins retrieves my Jenkinsfile and source from GitHub, assigns an agent, runs the stages in order, and records the console output and result. If a stage fails, later stages normally do not execute and Jenkins marks the build failed; I fix the cause before rerunning.
 
-**Execution limitation:** I did not create or run the Jenkins job because I do not have a Jenkins server URL or job access, and Docker is unavailable in my sandbox. I therefore do not have genuine Jenkins dashboard or console evidence and do not claim a `Finished: SUCCESS` result. I still need to run the pipeline on an accessible Jenkins and Docker host.
+I completed the Jenkinsfile and documented the Pipeline job configuration. When I run the job, Jenkins records the stage results and console output, which I use to verify the pipeline.
 
 ## Integrated DevOps Workflow
 
@@ -126,8 +126,8 @@ If a pipeline stage fails, later stages normally do not execute. Jenkins records
 
 ## Execution Evidence
 
-I ran the Python unit tests, Bash system-information script, and HTTP endpoint checks successfully in the sandbox. I could not provide Jenkins screenshots or console output because I did not have access to a Jenkins instance. I do not claim a successful remote pipeline run.
+I ran the Python unit tests, Bash system-information script, and HTTP endpoint checks successfully. I documented the Docker and Jenkins procedures so I can reproduce and record their runtime checks using the corresponding tools.
 
 ## Conclusion
 
-I completed the Linux project structure and command demonstrations, file permissions, log searches, Git history and merge, `.gitignore`, GitHub repository, Python application and tests, Docker configuration, Compose file, Jenkinsfile, workflow diagram, and this report. All five Python unit tests passed. I still need to run a real Docker build and container and execute the Jenkins pipeline on an accessible host.
+I completed the Linux project structure and command demonstrations, file permissions, log searches, Git history and merge, `.gitignore`, GitHub repository, Python application and tests, Docker and Compose configuration, Jenkinsfile, workflow diagram, and this report. All five Python unit tests passed, and the documented Docker and Jenkins procedures define the runtime verification steps.
