@@ -1,0 +1,1 @@
+Public example file: owner can read and write; group and others can read.

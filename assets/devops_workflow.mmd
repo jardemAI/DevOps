@@ -1,0 +1,10 @@
+flowchart LR
+    L[Linux workspace] --> G[Git commits and branch merge]
+    G --> H[GitHub repository]
+    H --> J[Jenkins Pipeline]
+    J --> C[Checkout]
+    C --> B[Build and tests]
+    B --> D[Docker image build]
+    D --> R[Docker container run]
+    R --> S[Health and identity check]
+    S --> OK[Pipeline SUCCESS]
